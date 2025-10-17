@@ -47,8 +47,6 @@ short NumberOfDaysFromTheBeginningOfTheYear(short day,short month ,short year) {
     for (short j = 1; j <= month - 1; j++) {
 
         TotalDays += NumberOfDaysInAMonth(year, j);
-
-
     }
     
     TotalDays += day;
