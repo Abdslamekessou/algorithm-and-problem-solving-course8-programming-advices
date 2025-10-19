@@ -1,5 +1,4 @@
 #include <iostream>
-#include <vector>
 #include <string>
 
 
@@ -52,7 +51,7 @@ bool IsLastDayInMonth(sDate Date) {
 }
 
 
-bool IsLastDayInYear(short Month) {
+bool IsLastMonthInYear(short Month) {
 
     return Month == 12 ;
 
@@ -94,6 +93,7 @@ short ReadDay() {
 }
 
 
+
 sDate ReadFullDate() {
 
     sDate Date;
@@ -124,14 +124,14 @@ int main()
     }
 
 
-    if (IsLastDayInYear(Date.Month)) {
+    if (IsLastMonthInYear(Date.Month)) {
 
-        cout << "\nYes , Day is Last Day in Year.\n";
+        cout << "\nYes , Month is Last Month in Year.\n";
 
     }
     else {
 
-        cout << "\nYes , Day is NOT Last Day in Year.\n";
+        cout << "\nYes , Month is NOT Last Month in Year.\n";
 
     }
 
