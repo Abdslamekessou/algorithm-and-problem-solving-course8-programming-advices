@@ -100,9 +100,10 @@ bool IsDate1AfterDate2(sDate Date1, sDate Date2) {
 
 int main()
 {
-    
+    cout << "Enter Date1 : ";
     sDate Date1 = ReadFullDate();
-
+   
+    cout << "\n\nEnter Date2 : ";
     sDate Date2 = ReadFullDate();
 
     if (IsDate1AfterDate2(Date1, Date2)) {
