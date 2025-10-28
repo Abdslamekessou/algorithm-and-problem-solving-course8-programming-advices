@@ -9,7 +9,7 @@ using namespace std;
    💡 Example:
       Period1 = 1/1/2025 → 10/1/2025
       Period2 = 5/1/2025 → 31/12/2025
-      Output → Overlap Days = 6 
+      Output → Overlap Days = 5 
 
 */
 
