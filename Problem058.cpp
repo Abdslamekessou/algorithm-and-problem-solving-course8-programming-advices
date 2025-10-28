@@ -163,7 +163,7 @@ int main()
 {
     stPeriod Period1;
     stPeriod Period2;
-    sDate StartDate1, EndDate1, StartDate2, EndDate2;
+
 
     cout << "Enter Period 1 :";
     Period1 = ReadPeriod();
