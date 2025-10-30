@@ -9,12 +9,13 @@
 
 using namespace std;
 
-const string ClientsFileName = "D:\\Programming Advices\\Course8 C++\\Bank3\\Clients.txt";
-const string UsersFileName = "D:\\Programming Advices\\Course8 C++\\Bank3\\Users.txt"; 
+const string ClientsFileName = "C:\\Programming Advices\\Course8 C++\\bank3\\Clients.txt";
+const string UsersFileName = "C:\\Programming Advices\\Course8 C++\\bank3\\Users.txt";
 
- 
+
 void ShowMainMenu();
 void ShowTransactionsMenu();
+void ShowLoginScreen();
 
 struct sClient
 {
@@ -214,7 +215,7 @@ void ShowAllClientsScreen()
     }
     else {
 
-        for (sClient Client : vClients)
+        for (sClient &Client : vClients)
         {
 
             PrintClientRecordLine(Client);
@@ -242,7 +243,7 @@ void PrintClientCard(sClient Client)
 
 bool FindClientByAccountNumber(string AccountNumber, vector <sClient> vClients, sClient& Client)
 {
-    for (sClient C : vClients)
+    for (sClient &C : vClients)
     {
 
         if (C.AccountNumber == AccountNumber)
@@ -273,6 +274,7 @@ sClient ChangeClientRecord(string AccountNumber)
 
     cout << "Enter AccountBalance? ";
     cin >> Client.AccountBalance;
+
     return Client;
 }
 
@@ -304,7 +306,7 @@ vector <sClient> SaveCleintsDataToFile(string FileName, vector <sClient> vClient
 
     if (MyFile.is_open())
     {
-        for (sClient C : vClients)
+        for (sClient &C : vClients)
         {
 
             if (C.MarkForDelete == false)
@@ -513,7 +515,8 @@ enum enMainMenueOptions
 {
     eListClients = 1, eAddNewClient = 2,
     eDeleteClient = 3, eUpdateClient = 4,
-    eFindClient = 5, eShowTransactionsMenu = 6, eExit = 7
+    eFindClient = 5, eShowTransactionsMenu = 6, 
+    eShowManageUsersScreen = 7 , eLogout = 8
 };
 
 enum enTransactionsOptions {
@@ -687,7 +690,7 @@ void ShowTotalBalances() {
     }
     else {
 
-        for (sClient Client : vClients)
+        for (sClient &Client : vClients)
         {
 
             PrintClientRecordBalanceLine(Client);
@@ -756,6 +759,7 @@ void ShowTransactionsMenu() {
     PerformTransactionMenuOption((enTransactionsOptions)ReadTransactionsMenuOption());
 }
 
+
 void PerfromMainMenuOperation(enMainMenueOptions MainMenueOption) {
 
     switch (MainMenueOption) {
@@ -797,9 +801,15 @@ void PerfromMainMenuOperation(enMainMenueOptions MainMenueOption) {
         GoBackToMainMenue();
         break;
 
-    case enMainMenueOptions::eExit:
+    case enMainMenueOptions::eShowManageUsersScreen:
         system("cls");
-        ShowEndScreen();
+        cout << "Manage User";
+        GoBackToMainMenue();
+        break;
+
+    case enMainMenueOptions::eLogout:
+        ShowLoginScreen();
+        
         break;
     }
 
@@ -815,7 +825,7 @@ sUser ConvertLinetoUserRecord(string Line, string Seperator = "#//#")
     User.UserName = vUserData[0];
     User.Password = vUserData[1];
     User.Permissions = stoi(vUserData[2]);
-     
+
     return User;
 }
 
@@ -845,9 +855,9 @@ vector <sUser> LoadUsersDataFromFile(string FileName)
 
 }
 
-bool FindUserByUserName(string UserName , vector <sUser> vUsers, sUser& User)
+bool FindUserByUserName(string UserName, vector <sUser> vUsers, sUser& User)
 {
-    for (sUser U : vUsers)
+    for (sUser &U : vUsers)
     {
 
         if (U.UserName == UserName)
@@ -861,59 +871,79 @@ bool FindUserByUserName(string UserName , vector <sUser> vUsers, sUser& User)
 }
 
 
-bool IsCorrectUserPassword(string Password , sUser User) {
-    
-    return User.Password == Password;
+
+string ReadUsername() {
+
+    string Username;
+
+    cout << "\nEnter User Name? ";
+    getline(cin >> ws, Username);
+
+    return Username;
 
 }
 
 
-sUser ReadUser() {
+string ReadPassword() {
 
-    sUser User;
+    string Password;
 
-    cout << "Enter User Name? ";
-    getline(cin, User.UserName);
+    cout << "\nEnter Password? ";
+    getline(cin, Password);
 
-    cout << "Enter Password? ";
-    getline(cin, User.Password);
-
-    return User;
+    return Password;
 
 }
+
+
+
 
 void Login() {
 
     vector <sUser> vUsers;
     sUser User;
+    sUser UserInput;
 
     vUsers = LoadUsersDataFromFile(UsersFileName);
 
-    sUser UserInput = ReadUser();
+    UserInput.UserName = ReadUsername();
+    UserInput.Password = ReadPassword();
 
     while (!FindUserByUserName(UserInput.UserName, vUsers, User)) {
 
         system("cls");
+        cout << "===========================================\n";
+        cout << "\t\tLogin Screen\n";
+        cout << "===========================================\n";
+
         cout << "\nInvalid Username/Password!\n";
-        sUser UserInput = ReadUser();
+
+        UserInput.UserName = ReadUsername();
+        UserInput.Password = ReadPassword();
+
+
 
     }
 
-    while (!IsCorrectUserPassword(UserInput.Password, User)) {
+    FindUserByUserName(UserInput.UserName, vUsers, User);
+
+    while (User.Password != UserInput.Password) {
 
         system("cls");
+        cout << "===========================================\n";
+        cout << "\t\tLogin Screen\n";
+        cout << "===========================================\n";
+
         cout << "\nInvalid Username/Password!\n";
-        sUser UserInput = ReadUser();
-         
+
+        UserInput.UserName = ReadUsername();
+        UserInput.Password = ReadPassword();
+
     }
 
-
-    
     ShowMainMenu();
 
 }
-
-
 
 
 
@@ -949,5 +979,5 @@ void ShowMainMenu() {
 int main()
 {
     ShowLoginScreen();
-    
+
 }
