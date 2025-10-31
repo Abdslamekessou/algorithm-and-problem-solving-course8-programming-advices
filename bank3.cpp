@@ -1081,6 +1081,16 @@ void PrintUserRecordLine(sUser User)
 
 }
 
+void PrintUserCard(sUser User)
+{
+    cout << "\nThe following are the client details:\n";
+    cout << "-----------------------------------";
+    cout << "\nUsername     : " << User.UserName;
+    cout << "\nPassword     : " << User.Password;
+    cout << "\nPermissions  : " << to_string(User.Permissions);
+    cout << "\n-----------------------------------\n";
+}
+
 
 void ShowAllUsersScreen()
 {
@@ -1158,11 +1168,71 @@ void AddNewUserScreen() {
 
     system("cls");
     cout << "===========================================\n";
-    cout << "\t\tManage Users Screen\n";
+    cout << "\t\tAdd New User Screen\n";
     cout << "===========================================\n";
 
     AddNewUser();
   
+}
+
+
+void DeleteUser() {
+
+    sUser User;
+    vector <sUser> vUsers = LoadUsersDataFromFile(UsersFileName);
+
+    User.UserName = ReadUsername();
+    User.Password = ReadPassword();
+
+    if (User.UserName == "Admin") {
+        cout << "\nAdmin cannot be deleted";
+        return;
+    }
+
+    if(!UserExistsByUserName(User.UserName, UsersFileName)) {
+
+        cout << "\nUser With Username [" << User.UserName << "] is Not Found!\n";
+
+    }
+
+    FindUserByUserName(User.UserName, vUsers, User);
+
+    PrintUserCard(User);
+
+    char answer = 'y';
+
+    cout << "\nAre you sure you want to delete this user? y/n? \n";
+    cin >> answer;
+
+    if (answer == 'y' || answer == 'Y') {
+
+        for (sUser & U : vUsers) {
+
+            if (U.UserName == User.UserName) {
+
+                U.MarkForDelete = true;
+                break;
+            }
+
+        }
+
+    }
+
+    SaveUsersDataToFile(UsersFileName, vUsers);
+
+    cout << "\nUser deleted succesfully\n";
+
+}
+
+void DeleteUserScreen() {
+
+    system("cls");
+    cout << "===========================================\n";
+    cout << "\t\tDelete User Screen\n";
+    cout << "===========================================\n";
+
+    DeleteUser();
+
 }
 
 
@@ -1184,7 +1254,7 @@ void PerfromManageUsersMenuOperation(enManageUsersMenuOptions ManageUsersMenuOpt
      
     case enManageUsersMenuOptions::eDeleteUser:
         system("cls");
-        cout << "eDeleteUser";
+        DeleteUserScreen();
         GoBackToManageUsersMenu();
         break;
 
