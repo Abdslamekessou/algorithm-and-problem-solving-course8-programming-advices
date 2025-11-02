@@ -262,6 +262,7 @@ int ReadPermissionsToSet() {
         return -1;
     }
 
+    cout << "\nDo you want to give access to : ";
 
     cout << "\nShow Client List? y/n?";
     cin >> Answer;
@@ -411,8 +412,36 @@ void PrintClientRecordLine(sClient Client)
 }
 
 
+void PrintUserRecordLine(stUser User)
+{
+    cout << "| " << setw(15) << left << User.UserName;
+    cout << "| " << setw(10) << left << User.Password;
+    cout << "| " << setw(40) << left << User.Permissions;
+
+}
+
+
+void ShowAccessDeniedMessage() {
+
+    cout << "\n------------------------------------\n";
+    cout << "Access Denied , \n You don't Have Permissions To Do this  , \n Please Contact Your Admin.";
+    cout << "\n------------------------------------\n";
+}
+
+
+
+
+
 void ShowAllClientsScreen()
 {
+
+    if (!CheckAccessPermission(enMainMenuePermissions::pListClients)) {
+        
+        ShowAccessDeniedMessage();
+        return;
+
+    }
+
     vector <sClient> vClients = LoadCleintsDataFromFile(ClientsFileName);
 
     cout << "\n\t\t\t\t\tClient List (" << vClients.size() << ") Client(s).";
@@ -447,6 +476,41 @@ void ShowAllClientsScreen()
     }
 }
 
+void ShowAllUsersScreen()
+{
+    vector <stUser> vUsers = LoadUsersDataFromFile(UsersFileName);
+
+    cout << "\n\t\t\t\t\tUser List (" << vUsers.size() << ") User(s).";
+    cout << "\n_______________________________________________________";
+    cout << "_________________________________________\n" << endl;
+
+    cout << "| " << left << setw(15) << "Username";
+    cout << "| " << left << setw(10) << "Password";
+    cout << "| " << left << setw(40) << "Permissions";
+
+    cout << "\n_______________________________________________________";
+    cout << "_________________________________________\n" << endl;
+
+    if (vUsers.size() == 0) {
+
+        cout << "\t\t\t\tNo Users Available In the System!";
+
+    }
+    else {
+
+        for (stUser& User : vUsers)
+        {
+
+            PrintUserRecordLine(User);
+            cout << endl;
+        }
+
+        cout << "\n_______________________________________________________";
+        cout << "_________________________________________\n" << endl;
+
+    }
+}
+
 
 void PrintClientCard(sClient Client)
 {
@@ -459,6 +523,17 @@ void PrintClientCard(sClient Client)
     cout << "\nAccount Balance: " << Client.AccountBalance;
     cout << "\n-----------------------------------\n";
 }
+
+void PrintUserCard(stUser User)
+{
+    cout << "\nThe following are the user details:\n";
+    cout << "-----------------------------------";
+    cout << "\nUsername     : " << User.UserName;
+    cout << "\nPassword     : " << User.Password;
+    cout << "\nPermissions  : " << User.Permissions;
+    cout << "\n-----------------------------------\n";
+}
+
 
 bool FindClientByAccountNumber(string AccountNumber, vector <sClient> vClients, sClient& Client)
 {
@@ -474,6 +549,39 @@ bool FindClientByAccountNumber(string AccountNumber, vector <sClient> vClients, 
     }
     return false;
 }
+
+
+bool FindUserByUsername(string UserName, vector <stUser> vUsers, stUser& User)
+{
+    for (stUser& U : vUsers)
+    {
+
+        if (U.UserName == UserName)
+        {
+            User = U;
+            return true;
+        }
+
+    }
+    return false;
+}
+
+
+bool FindUserByUsernameAndPassword(string UserName , string Password , vector <stUser> vUsers, stUser& User)
+{
+    for (stUser& U : vUsers)
+    {
+
+        if (U.UserName == UserName && U.Password == Password)
+        {
+            User = U;
+            return true;
+        }
+
+    }
+    return false;
+}
+
 
 
 sClient ChangeClientRecord(string AccountNumber)
@@ -497,6 +605,21 @@ sClient ChangeClientRecord(string AccountNumber)
     return Client;
 }
 
+stUser ChangeUserRecord(string Username) {
+
+    stUser User;
+
+    User.UserName = Username;
+
+    cout << "\n\nEnter Password : ";
+    getline(cin >> ws , User.Password);
+
+    User.Permissions = ReadPermissionsToSet();
+
+    return User;
+
+}
+
 
 bool MarkClientForDeleteByAccountNumber(string AccountNumber, vector <sClient>& vClients)
 {
@@ -514,6 +637,25 @@ bool MarkClientForDeleteByAccountNumber(string AccountNumber, vector <sClient>& 
 
     return false;
 }
+
+
+bool MarkUserForDeleteByUsername(string Username, vector <stUser>& vUsers)
+{
+
+    for (stUser& U : vUsers)
+    {
+
+        if (U.UserName == Username)
+        {
+            U.MarkForDelete = true;
+            return true;
+        }
+
+    }
+
+    return false;
+}
+
 
 
 vector <sClient> SaveCleintsDataToFile(string FileName, vector <sClient> vClients)
@@ -543,6 +685,36 @@ vector <sClient> SaveCleintsDataToFile(string FileName, vector <sClient> vClient
     return vClients;
 }
 
+
+vector <stUser> SaveUsersDataToFile(string FileName, vector <stUser> vUsers)
+{
+    fstream MyFile;
+    MyFile.open(FileName, ios::out);//overwrite
+
+    string DataLine;
+
+    if (MyFile.is_open())
+    {
+        for (stUser & U : vUsers)
+        {
+
+            if (U.MarkForDelete == false)
+            {
+                //we only write records that are not marked for delete.  
+                DataLine = ConvertUserRecordToLine(U);
+                MyFile << DataLine << endl;
+            }
+
+        }
+
+        MyFile.close();
+    }
+
+    return vUsers;
+}
+
+
+
 void AddDataLineToFile(string FileName, string stDataLine) {
 
     fstream MyFile;
@@ -566,6 +738,14 @@ void AddNewClient() {
 
 }
 
+void AddNewUser() {
+
+    stUser User;
+    User = ReadNewUser();
+    AddDataLineToFile(UsersFileName, ConvertUserRecordToLine(User));
+
+}
+
 void AddNewClients() {
 
     char AddMore = 'Y';
@@ -582,6 +762,24 @@ void AddNewClients() {
     } while (toupper(AddMore) == 'Y');
 
 }
+
+void AddNewUsers() {
+
+    char AddMore = 'Y';
+
+    do {
+
+        cout << "Adding New User : \n\n";
+        AddNewUser();
+
+        cout << "\nUser Added Successfully, do you want to add more Users? Y/N? ";
+        cin >> AddMore;
+
+    } while (toupper(AddMore) == 'Y');
+
+}
+
+//you stopped here go to page 25
 
 bool DeleteClientByAccountNumber(string AccountNumber, vector <sClient>& vClients) {
 
