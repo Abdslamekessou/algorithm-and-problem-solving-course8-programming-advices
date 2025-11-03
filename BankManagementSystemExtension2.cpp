@@ -1027,7 +1027,7 @@ void ShowFindUserScreen() {
 
     }
     else {
-        cout << "\nUser with Username ["<< Username << "is not found!\n";
+       cout << "\nUser with Username ("<< Username << ") is not found!\n";
     }
 
 
