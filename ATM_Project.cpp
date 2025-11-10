@@ -5,6 +5,19 @@
 #include <vector>
 #include <iomanip>
 
+/*
+🏦 ATM System (C++)
+A console-based banking system using file storage.
+
+🔹 Features:
+1️- Login with Account Number & PIN
+2️- Withdraw (Quick / Normal) 💸
+3️- Deposit & Check Balance 💰
+4️- Data saved in Clients.txt 📂
+
+*/
+
+
 using namespace std;
 
 const string ClientsFileName = "C:\\Programming Advices\\Course8 C++\\bank3Solution\\Clients.txt";
