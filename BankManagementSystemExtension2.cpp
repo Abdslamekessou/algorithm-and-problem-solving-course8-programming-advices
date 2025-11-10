@@ -4,6 +4,64 @@
 #include <vector>
 #include <iomanip>
 
+
+/ 🧠✨ Project Extension: Bank Management System (Extension2)
+// 
+// 📂 Data Files:
+// - "Clients.txt" → Stores all bank client data.
+// - "Users.txt" → Stores system user accounts and their permissions.
+//
+// ⚙️ Update Summary (New Additions):
+// This update introduces the **Manage Users Screen** and improves overall
+// system security, structure, and functionality.
+//
+// 🆕 New Features & Updates:
+//
+// 👤 Manage Users Screen (Admin Only):
+// -----------------------------------
+// This new screen allows administrators to fully manage system users stored in
+// "Users.txt". Each user record includes:
+//   - Username
+//   - Password
+//   - Permissions mask (integer value controlling access level)
+//
+// 🧩 Manage Users Menu Options:
+// [1] List Users → Display all registered users in a formatted table.  
+// [2] Add New User → Create a new user with specific permissions.  
+// [3] Delete User → Remove a user account after confirmation.  
+// [4] Update User → Edit username, password, or permissions.  
+// [5] Find User → Search for a user by username.  
+// [6] Main Menu → Return to the main screen.
+//
+// 🧱 Permissions System (Enhanced):
+// - Each user has a **permission mask** representing access rights.
+// - Admins have full permissions (-1).
+// - Regular users have limited access depending on assigned permissions.
+// - All menus now check `CheckAccessPermission()` before showing or allowing access.
+//
+// 🔐 Login & Session Management:
+// - Added secure login with username and password verification.
+// - Shows only menus allowed for the logged-in user.
+// - Added `Logout()` function to end a session safely.
+//
+// 💡 Example Output:
+//
+// -----------------------------------
+//        Manage Users Menu
+// -----------------------------------
+// [1] List Users
+// [2] Add New User
+// [3] Delete User
+// [4] Update User
+// [5] Find User
+// [6] Main Menu
+//
+// 🧾 Example Record:
+// "Admin#//#1234#//#-1" → Full permissions
+// "Abdessalem#//#1111#//#4" → Limited permissions
+//
+// ------------------------------------------------------------
+
 using namespace std;
 
 struct stUser {
