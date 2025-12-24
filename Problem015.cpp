@@ -3,12 +3,12 @@
 
 
 /*
-🧠 Program to check if a given date is the last day of the month or the last day of the year.
+🧠 Program to check if a given date is the last day of the month or the last month of the year.
 📅 Example:
    Date = 31/12/2025
 📤 Output →
-   Yes, Day is Last Day in Month.
-   Yes, Day is Last Day in Year.
+         Yes , Day is Last Day in Month.
+         Yes , Month is Last Month in Year.
 */
 
 
